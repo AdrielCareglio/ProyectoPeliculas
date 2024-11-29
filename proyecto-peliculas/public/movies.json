@@ -1,0 +1,9 @@
+[
+  { "id": 1, "title": "Inception", "genre": "CIENCIA FICCIÓN", "image": "https://www.mubis.es/media/covers/1029/1006/origen-inception-portada-original.jpg" },
+  { "id": 2, "title": "Titanic", "genre": "ROMANCE", "image": "https://cdn.hobbyconsolas.com/sites/navi.axelspringer.es/public/media/image/2016/12/titanic.jpg?tf=256x" },
+  { "id": 3, "title": "The Matrix", "genre": "CIENCIA FICCIÓN", "image": "https://pics.filmaffinity.com/Matrix-155050517-large.jpg" },
+  { "id": 4, "title": "Avengers", "genre": "ACCIÓN", "image": "https://i.pinimg.com/236x/26/04/7a/26047a439ca5d3d82b2d982f9eb2f124.jpg" },
+  { "id": 5, "title": "The Godfather", "genre": "DRAMA", "image": "https://i.pinimg.com/736x/b7/6c/8c/b76c8c1a165c057609773fe5f350344b.jpg" },
+  { "id": 6, "title": "Home Alone", "genre": "COMEDIA", "image": "https://m.media-amazon.com/images/I/71JOV4cIRzL._AC_UF1000,1000_QL80_.jpg" },
+  { "id": 7, "title": "The Shining", "genre": "TERROR", "image": "https://cdn.hobbyconsolas.com/sites/navi.axelspringer.es/public/media/image/2016/11/resplandor.jpg?tf=3840x" }
+]
