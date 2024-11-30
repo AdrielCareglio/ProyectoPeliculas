@@ -1,6 +1,6 @@
 <template>
   <div class="loading-screen">
-    <img src="https://i.pinimg.com/originals/82/20/4e/82204e9633c7a58a095b8dc07eb7d02b.gif" alt="Cargando..." />
+    <img src="https://cdn.dribbble.com/users/4011649/screenshots/10677615/media/948d65ef147246f25e31d44b9a59e660.gif" alt="Cargando..."/>
   </div>
 </template>
 
