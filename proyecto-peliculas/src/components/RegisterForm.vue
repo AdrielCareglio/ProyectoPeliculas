@@ -8,4 +8,24 @@
       </form>
     </div>
   </template>
+
+<script setup>
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
+const email = ref(""); // variable para el email
+const password = ref(""); // variable para la contraseña
+
+async function register() {
+  const auth = getAuth(); // instancia de autenticación
+  try {
+    // Registro del usuario en firebase 
+    await createUserWithEmailAndPassword(auth, email.value, password.value);
+    alert("Usuario registrado con éxito");
+  } catch (error) {
+    console.error("Error en el registro:", error);
+    alert("Error al registrar usuario: " + error.message);
+  }
+}
+</script>
+
   
