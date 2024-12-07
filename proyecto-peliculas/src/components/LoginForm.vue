@@ -1,53 +1,79 @@
 <template>
   <div class="login">
-    <h2 v-if="!user">Iniciar Sesión</h2>
-    <form v-if="!user" @submit.prevent="authenticate">
-      <input v-model="email" type="email" placeholder="Email" required />
-      <input v-model="password" type="password" placeholder="Contraseña" required />
-      <button type="submit">Entrar</button>
-    </form>
+    <!-- Inicio de sesión -->
+    <div v-if="currentView === 'login'">
+      <h2>Iniciar Sesión</h2>
+      <form @submit.prevent="authenticate">
+        <input v-model="email" type="email" placeholder="Email" required />
+        <input v-model="password" type="password" placeholder="Contraseña" required />
+        <button type="submit">Entrar</button>
+      </form>
+    </div>
 
-    <div v-else>
-      <p>Bienvenido, {{ user.email }}</p>
+    <!-- Cambio de vista -->
+    <div v-else-if="currentView === 'dashboard'">
+      <p>Bienvenido, {{ user?.email }}</p>
       <button @click="logout">Cerrar sesión</button>
+    </div>
+
+    <!--Contemplacion de errores -->
+    <div v-else>
+      <p>Error inesperado. Intenta recargar la página.</p>
     </div>
   </div>
 </template>
 
 <script setup>
+
 import { ref } from "vue"; // importación de ref para reactividad
 import { useCurrentUser } from "vuefire"; // usuario actual
-import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth"; // metodos propios de Firebase
+import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth"; // métodos propios de Firebase
 
-const email = ref(""); // variable del email
-const password = ref(""); // variable para la contraseña
-const user = useCurrentUser(); // ssuario actual
+/* Declaración de variables reactivas */
+const email = ref(""); // email
+const password = ref(""); // contraseña
+const user = useCurrentUser(); // estado del usuario actual
+const currentView = ref("login"); // control de la vista actual ('login', 'dashboard')
 
+/* Autenticación del usuario en Firebase */
 async function authenticate() {
-  const auth = getAuth(); //autenticacion
+  const auth = getAuth(); // inicializa la autenticación
   try {
-    // verifica usuario con firebase
+    // verifica el usuario con Firebase
     await signInWithEmailAndPassword(auth, email.value, password.value);
     alert("Inicio de sesión exitoso");
+    currentView.value = "dashboard"; // cambia la vista al dashboard
   } catch (error) {
+    // manejo de errores
     console.error("Error al iniciar sesión:", error);
-    alert("Credenciales incorrectas");
+    if (error.code === "auth/user-not-found") {
+      alert("El usuario no existe. Por favor, verifica el email.");
+    } else if (error.code === "auth/wrong-password") {
+      alert("Contraseña incorrecta. Por favor, inténtalo de nuevo.");
+    } else if (error.code === "auth/invalid-email") {
+      alert("Email inválido. Por favor, introduce un email válido.");
+    } else {
+      alert("Ocurrió un error inesperado al iniciar sesión.");
+    }
   }
 }
 
-//Incoporación de LogOut para cerrar la sesion del usuario actual
+/* Cierre de sesión del usuario actual */
 async function logout() {
-  const auth = getAuth(); 
+  const auth = getAuth(); // inicializa la autenticación
   try {
-    await signOut(auth); 
+    await signOut(auth); // cierra la sesión
     alert("Has cerrado sesión");
+    currentView.value = "login"; // cambia la vista al login
   } catch (error) {
     console.error("Error al cerrar sesión:", error);
+    alert("Ocurrió un error inesperado al cerrar sesión.");
   }
 }
 </script>
 
 <style scoped>
+/* Contenedor principal */
 .login {
   display: flex;
   flex-direction: column;
@@ -58,6 +84,7 @@ async function logout() {
   color: white;
 }
 
+/* Formulario */
 form {
   display: flex;
   width: 500px;
@@ -65,6 +92,7 @@ form {
   gap: 10px;
 }
 
+/* Boton */
 button {
   padding: 10px 20px;
   background-color: rgb(156, 0, 0);
