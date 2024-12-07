@@ -11,12 +11,18 @@
       </form>
     </div>
 
-    <!--Cambio de vista a registro (RegisterForm)-->
+    <!-- Vista para mostrar información del usuario autenticado -->
+    <div v-else-if="currentView === 'dashboard'">
+      <h2>Bienvenido, {{ user?.email }}</h2>
+      <button @click="logout">Cerrar sesión</button>
+    </div>
+
+    <!-- Cambio de vista a registro (RegisterForm) -->
     <div v-else-if="currentView === 'register'">
       <RegisterForm @switchToLogin="switchToLogin" />
     </div>
 
-    <!--Contemplacion de errores -->
+    <!-- Contemplacion de errores -->
     <div v-else>
       <p>Error inesperado. Intenta recargar la página.</p>
     </div>
@@ -24,13 +30,13 @@
 </template>
 
 <script setup>
-
-import { ref } from "vue"; // importación de ref para reactividad
+import { ref, defineEmits } from "vue"; // importación de ref y emits para reactividad
 import { useCurrentUser } from "vuefire"; // usuario actual
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth"; // métodos propios de Firebase
-import RegisterForm from './RegisterForm.vue'; //union con el componente de registro
+import RegisterForm from './RegisterForm.vue'; // unión con el componente de registro
 
-const emit = defineEmits(["authenticated"]);//actualizacion del estado a autenticado
+// Emite eventos al componente padre
+const emit = defineEmits(["authenticated", "loggedOut"]); // Se agrega "loggedOut" para manejar el cierre de sesión
 
 /* Declaración de variables reactivas */
 const email = ref(""); // email
@@ -42,12 +48,11 @@ const currentView = ref("login"); // control de la vista actual ('login', 'dashb
 async function authenticate() {
   const auth = getAuth(); // inicializa la autenticación
   try {
-    // verifica el usuario con Firebase
-    await signInWithEmailAndPassword(auth, email.value, password.value);
+    await signInWithEmailAndPassword(auth, email.value, password.value); // verifica el usuario con Firebase
     alert("Inicio de sesión exitoso");
     emit("authenticated"); // emite el evento autenticado
+    currentView.value = "dashboard"; // Cambia a la vista del dashboard
   } catch (error) {
-    // manejo de errores
     console.error("Error al iniciar sesión:", error);
     if (error.code === "auth/user-not-found") {
       alert("El usuario no existe. Por favor, verifica el email.");
@@ -67,7 +72,8 @@ async function logout() {
   try {
     await signOut(auth); // cierra la sesión
     alert("Has cerrado sesión");
-    currentView.value = "login"; // cambia la vista al login
+    emit("loggedOut"); // Emite el evento para que el padre maneje el cierre de sesión
+    currentView.value = "login"; // Cambia la vista al login
   } catch (error) {
     console.error("Error al cerrar sesión:", error);
     alert("Ocurrió un error inesperado al cerrar sesión.");

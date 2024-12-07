@@ -5,8 +5,9 @@
         <input v-model="email" type="email" placeholder="Email" required />
         <input v-model="password" type="password" placeholder="Contraseña" required />
         <button type="submit">Registrarse</button>
+        <p>¿Ya tienes una cuenta? <a @click.prevent="emit('switchToLogin')" href="#">Inicia sesión</a></p> 
       </form>
-      <p>¿Ya tienes una cuenta? <a @click.prevent="emit('switchToLogin')" href="#">Inicia sesión</a></p>
+      
     </div>
   </template>
 

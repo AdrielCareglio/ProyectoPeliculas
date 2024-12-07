@@ -4,10 +4,13 @@
       <div class="container">
         <h1 class="logo" @click="goToGenreSelection">NOTFLIX</h1>
       </div>
-      <div>
-        <h1 class="logout" @click="goToLoginForm">Cerrar sesión</h1>
+
+      <div v-if="user">
+        <span class="user-info">Bienvenido, {{ user.email }}</span>
+        <button class="logout" @click="logout">Cerrar sesión</button>
       </div>
     </header>
+
     <LoadingScreen v-if="screen === 'loading'" />
     <LoginForm v-if="screen === 'login'" @authenticated="handleLogin" />
     <GenreSelection v-if="screen === 'genres'" @submit="handleGenreSelection" />
@@ -24,6 +27,8 @@ import LoadingScreen from './components/LoadingScreen.vue';
 import LoginForm from './components/LoginForm.vue';
 import GenreSelection from './components/GenreSelection.vue';
 import MovieResults from './components/MovieResults.vue';
+import { useCurrentUser } from "vuefire";
+import { getAuth, signOut } from "firebase/auth"; // Importar logout de Firebase
 
 export default {
   components: {
@@ -38,6 +43,7 @@ export default {
       genres: [], // Géneros seleccionados
       movies: [], // Lista completa de películas
       filteredMovies: [], // Películas filtradas por género
+      user: useCurrentUser(), // Usuario autenticado actual
     };
   },
   methods: {
@@ -65,6 +71,17 @@ export default {
     },
     goToLoginForm() {
       this.screen = "login"; // Regresa al formulario de login
+    },
+    async logout() {
+      const auth = getAuth(); // Obtiene la instancia de autenticación
+      try {
+        await signOut(auth); // Cierra la sesión del usuario
+        alert("Sesión cerrada con éxito");
+        this.screen = "login"; // Redirige a la pantalla de inicio de sesión
+      } catch (error) {
+        console.error("Error al cerrar sesión:", error);
+        alert("Ocurrió un error al cerrar la sesión.");
+      }
     },
   },
   mounted() {

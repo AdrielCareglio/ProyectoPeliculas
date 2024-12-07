@@ -233,3 +233,7 @@ button:disabled {
   color: #aaa;
   cursor: not-allowed;
 }
+
+p{
+  color: #726c82;
+}
