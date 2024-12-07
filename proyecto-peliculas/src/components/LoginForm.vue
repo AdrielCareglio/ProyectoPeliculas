@@ -7,7 +7,13 @@
         <input v-model="email" type="email" placeholder="Email" required />
         <input v-model="password" type="password" placeholder="Contraseña" required />
         <button type="submit">Entrar</button>
+        <p>¿Aún no tienes cuenta?<a @click.prevent="switchToRegister" href="#">Regístrate aquí</a></p>
       </form>
+    </div>
+
+    <!--Cambio de vista a registro (RegisterForm)-->
+    <div v-else-if="currentView === 'register'">
+      <RegisterForm @switchToLogin="switchToLogin" />
     </div>
 
     <!-- Cambio de vista -->
