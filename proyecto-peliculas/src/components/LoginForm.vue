@@ -16,12 +16,6 @@
       <RegisterForm @switchToLogin="switchToLogin" />
     </div>
 
-    <!-- Cambio de vista -->
-    <div v-else-if="currentView === 'dashboard'">
-      <p>Bienvenido, {{ user?.email }}</p>
-      <button @click="logout">Cerrar sesión</button>
-    </div>
-
     <!--Contemplacion de errores -->
     <div v-else>
       <p>Error inesperado. Intenta recargar la página.</p>
@@ -36,6 +30,7 @@ import { useCurrentUser } from "vuefire"; // usuario actual
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth"; // métodos propios de Firebase
 import RegisterForm from './RegisterForm.vue'; //union con el componente de registro
 
+const emit = defineEmits(["authenticated"]);//actualizacion del estado a autenticado
 
 /* Declaración de variables reactivas */
 const email = ref(""); // email
@@ -50,7 +45,7 @@ async function authenticate() {
     // verifica el usuario con Firebase
     await signInWithEmailAndPassword(auth, email.value, password.value);
     alert("Inicio de sesión exitoso");
-    currentView.value = "dashboard"; // cambia la vista al dashboard
+    emit("authenticated"); // emite el evento autenticado
   } catch (error) {
     // manejo de errores
     console.error("Error al iniciar sesión:", error);

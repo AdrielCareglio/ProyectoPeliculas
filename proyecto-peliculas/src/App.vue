@@ -1,13 +1,12 @@
 <template>
   <div id="app">
-    <header>
+    <header v-if="screen !== 'loading'">
       <div class="container">
         <h1 class="logo" @click="goToGenreSelection">NOTFLIX</h1>
       </div>
       <div>
         <h1 class="logout" @click="goToLoginForm">Cerrar sesión</h1>
       </div>
-      
     </header>
     <LoadingScreen v-if="screen === 'loading'" />
     <LoginForm v-if="screen === 'login'" @authenticated="handleLogin" />
@@ -19,28 +18,6 @@
     />
   </div>
 </template>
-
-<style scoped>
-.logo{
-  margin-left: 20px;
-}
-.logout{
-  margin: 2px 20px 0px 0px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: rgb(156, 0, 0);
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-.logout:hover{
-  background-color: #5b0000;
-}
-</style>
-
 
 <script>
 import LoadingScreen from './components/LoadingScreen.vue';
@@ -74,7 +51,7 @@ export default {
       }
     },
     handleLogin() {
-      this.screen = "genres"; // Cambia a la pantalla de selección de géneros
+      this.screen = "genres"; // Redirige a la pantalla de selección de géneros
     },
     handleGenreSelection(selectedGenres) {
       this.genres = selectedGenres;
@@ -84,9 +61,7 @@ export default {
       this.screen = "results"; // Cambia a la pantalla de resultados
     },
     goToGenreSelection() {
-      if (this.screen === "results") {
-        this.screen = "genres"; // Regresa a la pantalla de selección de géneros
-      }
+      this.screen = "genres"; // Regresa a la pantalla de selección de géneros
     },
     goToLoginForm() {
       this.screen = "login"; // Regresa al formulario de login
@@ -100,3 +75,24 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.logo {
+  margin-left: 20px;
+}
+.logout {
+  margin: 2px 20px 0px 0px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(156, 0, 0);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.logout:hover {
+  background-color: #5b0000;
+}
+</style>
