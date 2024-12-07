@@ -7,7 +7,7 @@
         <input v-model="email" type="email" placeholder="Email" required />
         <input v-model="password" type="password" placeholder="Contraseña" required />
         <button type="submit">Entrar</button>
-        <p>¿Aún no tienes cuenta?<a @click.prevent="switchToRegister" href="#">Regístrate aquí</a></p>
+        <p><a @click.prevent="switchToRegister" href="#">Regístrate aquí</a></p>
       </form>
     </div>
 
@@ -34,6 +34,8 @@
 import { ref } from "vue"; // importación de ref para reactividad
 import { useCurrentUser } from "vuefire"; // usuario actual
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth"; // métodos propios de Firebase
+import RegisterForm from './RegisterForm.vue'; //union con el componente de registro
+
 
 /* Declaración de variables reactivas */
 const email = ref(""); // email
@@ -75,6 +77,16 @@ async function logout() {
     console.error("Error al cerrar sesión:", error);
     alert("Ocurrió un error inesperado al cerrar sesión.");
   }
+}
+
+/* Cambio a la vista de registro */
+function switchToRegister() {
+  currentView.value = "register"; // Cambia a la vista de registro
+}
+
+/* Cambiar a la vista de inicio de sesion (Login) */
+function switchToLogin() {
+  currentView.value = "login";
 }
 </script>
 
