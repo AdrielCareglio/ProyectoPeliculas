@@ -1,30 +1,48 @@
 <template>
   <div class="login">
-    <h2>Iniciar Sesión</h2>
-    <form @submit.prevent="authenticate">
+    <h2 v-if="!user">Iniciar Sesión</h2>
+    <form v-if="!user" @submit.prevent="authenticate">
       <input v-model="email" type="email" placeholder="Email" required />
       <input v-model="password" type="password" placeholder="Contraseña" required />
       <button type="submit">Entrar</button>
     </form>
+
+    <div v-else>
+      <p>Bienvenido, {{ user.email }}</p>
+      <button @click="logout">Cerrar sesión</button>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue"; // importado de ref para mantener la reactividad
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth"; // importado de metodos propios de firebase
+import { ref } from "vue"; // importación de ref para reactividad
+import { useCurrentUser } from "vuefire"; // usuario actual
+import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth"; // metodos propios de Firebase
 
 const email = ref(""); // variable del email
-const password = ref(""); // variable de la contraseña
+const password = ref(""); // variable para la contraseña
+const user = useCurrentUser(); // ssuario actual
 
 async function authenticate() {
-  const auth = getAuth(); // instancia de autenticacion
+  const auth = getAuth(); //autenticacion
   try {
-    // Intenta autenticar al usuario en Firebase
+    // verifica usuario con firebase
     await signInWithEmailAndPassword(auth, email.value, password.value);
     alert("Inicio de sesión exitoso");
   } catch (error) {
     console.error("Error al iniciar sesión:", error);
     alert("Credenciales incorrectas");
+  }
+}
+
+//Incoporación de LogOut para cerrar la sesion del usuario actual
+async function logout() {
+  const auth = getAuth(); 
+  try {
+    await signOut(auth); 
+    alert("Has cerrado sesión");
+  } catch (error) {
+    console.error("Error al cerrar sesión:", error);
   }
 }
 </script>
